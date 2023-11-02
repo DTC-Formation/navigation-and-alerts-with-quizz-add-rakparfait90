@@ -129,7 +129,7 @@ class _MyQuizState extends State<MyQuiz> {
     if (questions[questionIndex].answer == index) {
       score++;
     }
-    // <Fampisehoana notif
+    // Fampisehoana notif
     final snackAns = SnackBar(
       content: Text(
         index == questions[questionIndex].answer
