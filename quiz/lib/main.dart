@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyQuiz());
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'Quizz App',
+      home: MyQuiz(),
+    );
+  }
 }
 
 class MyQuiz extends StatefulWidget {
@@ -64,63 +76,60 @@ class _MyQuizState extends State<MyQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Quizz App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Quizz App'),
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                questions[questionIndex].question,
-                style: const TextStyle(fontSize: 20.0),
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Quizz App'),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              questions[questionIndex].question,
+              style: const TextStyle(fontSize: 20.0),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: ElevatedButton(
-                        child: Text(questions[questionIndex].options[0]),
-                        onPressed: () {
-                          _checkAnswer(context, 0);
-                        },
-                      ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: ElevatedButton(
+                      child: Text(questions[questionIndex].options[0]),
+                      onPressed: () {
+                        _checkAnswer(context, 0);
+                      },
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: ElevatedButton(
-                        child: Text(questions[questionIndex].options[1]),
-                        onPressed: () {
-                          _checkAnswer(context, 1);
-                        },
-                      ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: ElevatedButton(
+                      child: Text(questions[questionIndex].options[1]),
+                      onPressed: () {
+                        _checkAnswer(context, 1);
+                      },
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: ElevatedButton(
-                        child: Text(questions[questionIndex].options[2]),
-                        onPressed: () {
-                          _checkAnswer(context, 2);
-                        },
-                      ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    child: ElevatedButton(
+                      child: Text(questions[questionIndex].options[2]),
+                      onPressed: () {
+                        _checkAnswer(context, 2);
+                      },
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
