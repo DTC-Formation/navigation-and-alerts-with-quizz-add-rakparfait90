@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Quizz App',
+      title: 'Quiz Madagascar',
       home: MyQuiz(),
     );
   }
@@ -72,7 +72,7 @@ class _MyQuizState extends State<MyQuiz> {
     Question("La capitale de la 4è république malgache est ?",
         ["Antananarivo", "Tamatave", "Majunga"], 0),
     Question("Le président de la 4è république malgache est ?",
-        ["Andry Rajoelina", "Marc Ravalomanana", "Toto Ramatolanjona"], 0),
+        ["Andry Rajoelina", "Marc Ravalomanana", "Rakotoarisaona Parfait"], 0),
   ];
 
   int score = 0;
@@ -84,7 +84,7 @@ class _MyQuizState extends State<MyQuiz> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Quizz',
+          'Quiz Madagascar',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
@@ -156,14 +156,13 @@ class _MyQuizState extends State<MyQuiz> {
                       "Votre score final est de $score sur ${questions.length}.",
                       style: const TextStyle(fontSize: 18.0),
                     ),
+                    Text(
+                      _getScoreMessage(),
+                      style: const TextStyle(fontSize: 18.0),
+                    ),
                     ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          score = 0;
-                          questionIndex = 0;
-                          answered = false;
-                          showResult = false;
-                        });
+                        _resetQuiz();
                       },
                       child: const Text("Recommencer"),
                     ),
@@ -178,34 +177,85 @@ class _MyQuizState extends State<MyQuiz> {
 
   void _checkAnswer(BuildContext context, int index) {
     if (questionIndex < questions.length) {
-      if (questions[questionIndex].answer == index) {
-        score++;
+      bool isCorrect = questions[questionIndex].answer == index;
+
+      // Incrémentation du score
+      if (isCorrect) {
+        setState(() {
+          score++;
+        });
       }
 
-      // Fampisehoana notif
-      final snackAns = SnackBar(
-        content: Text(
-          index == questions[questionIndex].answer
-              ? "Bonne réponse !"
-              : "Mauvaise réponse !",
-        ),
-        duration: const Duration(milliseconds: 500),
+      // affichage du popup
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: isCorrect ? Colors.green : Colors.red,
+            title: Icon(
+              isCorrect ? Icons.check_circle : Icons.cancel,
+              color: Colors.white,
+              size: 100.0,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _nextQuestion();
+                },
+                child: const Text(
+                  'Suivant',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       );
-      ScaffoldMessenger.of(context).showSnackBar(snackAns);
 
-      // Fanontaniana manaraka
-      questionIndex++;
-
-      setState(() {
-        if (questionIndex < questions.length) {
-          answered = false;
-          // Réinitialiser la variable answered pour la prochaine question
-        } else {
-          answered = true;
-          showResult = true;
-        }
-      });
+      // Passer automatiquement à la question suivante après 800 millisecondes
+      Future.delayed(
+        const Duration(milliseconds: 0),
+        () {
+          _nextQuestion();
+        },
+      );
     }
+  }
+
+  void _nextQuestion() {
+    setState(() {
+      if (questionIndex < questions.length - 1) {
+        questionIndex++;
+        answered = false;
+      } else {
+        answered = true;
+        showResult = true;
+      }
+    });
+  }
+
+  String _getScoreMessage() {
+    if (score > 20) {
+      return "Bravo! Vous avez assuré!";
+    } else if (score > 18) {
+      return "C'est déjà mieux";
+    } else if (score > 11) {
+      return "Un petit effort";
+    } else {
+      return "Vous avez échoué!";
+    }
+  }
+
+  void _resetQuiz() {
+    setState(() {
+      score = 0;
+      questionIndex = 0;
+      answered = false;
+      showResult = false;
+    });
   }
 }
 
